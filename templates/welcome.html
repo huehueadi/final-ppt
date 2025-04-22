@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to AI PowerPoint Generator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-bg: #f8f9fa;
+            --secondary-bg: #ffffff;
+            --card-bg: #ffffff;
+            --primary-text: #333333;
+            --secondary-text: #6c757d;
+            --accent-color: #4361ee;
+            --accent-hover: #3a56d4;
+            --border-color: #dee2e6;
+            --light-color: #f1f3f9;
+            --dark-color: #333;
+            --gray-color: #6c757d;
+            --success-color: #28a745;
+            --success-hover: #218838;
+            --error-color: #dc3545;
+            --shadow: 0 4px 12px rgba(0,0,0,0.05);
+            --card-radius: 12px;
+            --border-radius: 6px;
+            --font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: var(--font-family);
+            color: var(--primary-text);
+            line-height: 1.6;
+            background-color: var(--primary-bg);
+        }
+        
+        .header {
+            background-color: var(--secondary-bg);
+            color: var(--primary-text);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            height: 60px;
+        }
+        
+        .logo {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--accent-color);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--border-radius);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .btn-primary {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(67, 97, 238, 0.2);
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            color: var(--accent-color);
+            border: 1px solid var(--accent-color);
+        }
+        
+        .btn-outline:hover {
+            background-color: rgba(67, 97, 238, 0.05);
+            transform: translateY(-2px);
+        }
+        
+        .hero {
+            background: linear-gradient(135deg, rgba(67, 97, 238, 0.05), rgba(67, 97, 238, 0.1));
+            color: var(--primary-text);
+            padding: 8rem 2rem 5rem;
+            text-align: center;
+        }
+        
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent-color);
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 2.5rem;
+            color: var(--secondary-text);
+        }
+        
+        .features {
+            padding: 5rem 2rem;
+            background-color: var(--secondary-bg);
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .section-title h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--accent-color);
+        }
+        
+        .section-title p {
+            color: var(--secondary-text);
+            max-width: 700px;
+            margin: 0 auto;
+            font-size: 1.1rem;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .feature-card {
+            background-color: var(--card-bg);
+            border-radius: var(--card-radius);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-color);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .feature-icon {
+            background-color: rgba(67, 97, 238, 0.1);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            color: var(--accent-color);
+            font-size: 1.5rem;
+        }
+        
+        .feature-card h3 {
+            margin-bottom: 1rem;
+            color: var(--accent-color);
+            font-size: 1.3rem;
+        }
+        
+        .how-it-works {
+            padding: 5rem 2rem;
+            background-color: var(--primary-bg);
+        }
+        
+        .steps {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .step {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+        
+        .step:last-child {
+            margin-bottom: 0;
+        }
+        
+        .step-number {
+            background-color: var(--accent-color);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 1.5rem;
+            flex-shrink: 0;
+            box-shadow: 0 4px 8px rgba(67, 97, 238, 0.2);
+        }
+        
+        .step-content {
+            flex: 1;
+            background-color: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: var(--card-radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s ease;
+        }
+        
+        .step-content:hover {
+            transform: translateX(5px);
+        }
+        
+        .step-content h3 {
+            margin-bottom: 0.5rem;
+            color: var(--accent-color);
+        }
+        
+        .step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 40px;
+            left: 20px;
+            width: 2px;
+            height: calc(100% - 30px);
+            background-color: rgba(67, 97, 238, 0.2);
+        }
+        
+        .cta {
+            background: linear-gradient(135deg, var(--accent-color), #5e7bf9);
+            color: white;
+            padding: 5rem 2rem;
+            text-align: center;
+        }
+        
+        .cta h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .cta p {
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .btn-light {
+            background-color: white;
+            color: var(--accent-color);
+        }
+        
+        .btn-light:hover {
+            background-color: rgba(255,255,255,0.9);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .btn-outline-light {
+            background-color: transparent;
+            color: white;
+            border: 1px solid white;
+        }
+        
+        .btn-outline-light:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .btn-large {
+            padding: 0.9rem 2.2rem;
+            font-size: 1rem;
+        }
+        
+        footer {
+            background-color: var(--secondary-bg);
+            color: var(--secondary-text);
+            padding: 2rem;
+            text-align: center;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        @media (max-width: 992px) {
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .feature-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 1.5rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero {
+                padding: 7rem 1.5rem 4rem;
+            }
+            
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+            
+            .feature-grid {
+                grid-template-columns: 1fr;
+                max-width: 500px;
+                margin: 0 auto;
+            }
+            
+            .step {
+                flex-direction: column;
+            }
+            
+            .step-number {
+                margin-right: 0;
+                margin-bottom: 1rem;
+            }
+            
+            .step-content {
+                width: 100%;
+            }
+            
+            .step:not(:last-child)::after {
+                display: none;
+            }
+            
+            .section-title h2 {
+                font-size: 1.6rem;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .header {
+                padding: 1rem;
+            }
+            
+            .auth-buttons {
+                gap: 0.5rem;
+            }
+            
+            .btn {
+                padding: 0.6rem 1rem;
+            }
+            
+            .hero h1 {
+                font-size: 1.6rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .btn-large {
+                padding: 0.75rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">
+            <i class="fas fa-chart-bar"></i> PowerPoint Generator
+        </div>
+        <div class="auth-buttons">
+            <a href="/login" class="btn btn-outline">
+                <i class="fas fa-sign-in-alt"></i> Log In
+            </a>
+            <a href="/register" class="btn btn-primary">
+                <i class="fas fa-user-plus"></i> Sign Up
+            </a>
+        </div>
+    </header>
+    
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Generate Professional Presentations in Minutes</h1>
+            <p>Use the power of AI to create beautiful, content-rich PowerPoint presentations with just a few clicks. Save time and deliver impressive presentations without the hassle.</p>
+            <a href="/register" class="btn btn-primary btn-large">
+                <i class="fas fa-rocket"></i> Get Started for Free
+            </a>
+        </div>
+    </section>
+    
+    <section class="features">
+        <div class="section-title">
+            <h2>Why Choose Our PowerPoint Generator?</h2>
+            <p>Our AI-powered tool makes creating professional presentations easier and faster than ever before.</p>
+        </div>
+        
+        <div class="feature-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <h3>Save Time</h3>
+                <p>Generate complete presentations in minutes instead of hours. Focus on delivering your message, not formatting slides.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-paint-brush"></i>
+                </div>
+                <h3>Professional Templates</h3>
+                <p>Choose from a variety of professional templates designed to make your presentations stand out.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <h3>AI-Powered Content</h3>
+                <p>Our local AI generates relevant, informative content for your presentations on any topic you choose.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-image"></i>
+                </div>
+                <h3>Image Placeholders</h3>
+                <p>Get intelligent image suggestions with placeholders that you can easily replace with your own visuals.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-edit"></i>
+                </div>
+                <h3>Easy Editing</h3>
+                <p>Customize and edit generated presentations to match your exact needs before downloading.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-lock"></i>
+                </div>
+                <h3>Privacy First</h3>
+                <p>All processing happens locally on your machine, ensuring your data stays private.</p>
+            </div>
+        </div>
+    </section>
+    
+    <section class="how-it-works">
+        <div class="section-title">
+            <h2>How It Works</h2>
+            <p>Creating presentations with our tool is simple and intuitive.</p>
+        </div>
+        
+        <div class="steps">
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h3>Create an Account</h3>
+                    <p>Sign up for a free account to access all the features of our PowerPoint Generator.</p>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h3>Choose a Template</h3>
+                    <p>Browse through our collection of professional templates and select the one that best fits your needs.</p>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h3>Enter Your Topic</h3>
+                    <p>Specify your presentation topic and how many slides you need. Our AI will handle the rest.</p>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <h3>Review and Edit</h3>
+                    <p>Preview your presentation, make any necessary edits or customizations to perfect it.</p>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">5</div>
+                <div class="step-content">
+                    <h3>Download and Present</h3>
+                    <p>Download your finished presentation as a PowerPoint file (.pptx) ready to use or share.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="cta">
+        <h2>Ready to Create Amazing Presentations?</h2>
+        <p>Join thousands of users who are saving time and creating professional presentations with our AI-powered tool.</p>
+        <div class="cta-buttons">
+            <a href="/register" class="btn btn-light btn-large">
+                <i class="fas fa-user-plus"></i> Sign Up Now
+            </a>
+            <a href="/login" class="btn btn-outline-light btn-large">
+                <i class="fas fa-sign-in-alt"></i> Log In
+            </a>
+        </div>
+    </section>
+    
+    <footer>
+        <div class="footer-content">
+            <p>© 2025 PowerPoint Generator | Powered by Local Ollama | Created with Flask and Python-PPTX</p>
+        </div>
+    </footer>
+</body>
+</html>

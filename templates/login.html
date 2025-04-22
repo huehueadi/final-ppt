@@ -1,0 +1,30 @@
+{% extends "auth_base.html" %}
+
+{% block title %}Login - PowerPoint Generator{% endblock %}
+
+{% block tagline %}Sign in to create amazing presentations{% endblock %}
+
+{% block content %}
+<form method="POST" action="/login">
+    <div class="input-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required placeholder="Enter your email">
+    </div>
+    
+    <div class="input-group">
+        <label for="password">
+            Password
+            <i class="password-toggle-icon" onclick="togglePassword('password')"></i>
+        </label>
+        <input type="password" id="password" name="password" required placeholder="Enter your password">
+    </div>
+    
+    <button type="submit" class="btn">
+        <i class="fas fa-sign-in-alt"></i> Sign In
+    </button>
+</form>
+
+<div class="links">
+    <p>Don't have an account? <a href="/register">Register</a></p>
+</div>
+{% endblock %}

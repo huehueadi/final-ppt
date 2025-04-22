@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI PowerPoint Generator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-bg: #f8f9fa;
+            --secondary-bg: #ffffff;
+            --card-bg: #ffffff;
+            --primary-text: #333333;
+            --secondary-text: #6c757d;
+            --accent-color: #4361ee;
+            --accent-hover: #3a56d4;
+            --border-color: #dee2e6;
+            --light-color: #f1f3f9;
+            --dark-color: #333;
+            --gray-color: #6c757d;
+            --success-color: #28a745;
+            --success-hover: #218838;
+            --error-color: #dc3545;
+            --shadow: 0 4px 12px rgba(0,0,0,0.05);
+            --card-radius: 12px;
+            --border-radius: 6px;
+            --font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--primary-bg);
+            color: var(--primary-text);
+            font-family: var(--font-family);
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            grid-template-rows: 60px 1fr;
+            grid-template-areas: 
+                "header header"
+                "sidebar main";
+            height: 100vh;
+        }
+
+        .user-header {
+            grid-area: header;
+            background-color: var(--secondary-bg);
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 1.5rem;
+            z-index: 10;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .app-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--accent-color);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .user-navigation {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        
+        .user-navigation a {
+            text-decoration: none;
+            color: var(--dark-color);
+            font-size: 0.9rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+        
+        .user-navigation a:hover {
+            background-color: var(--light-color);
+        }
+        
+        .user-navigation a.active {
+            color: var(--accent-color);
+            font-weight: 500;
+            background-color: rgba(67, 97, 238, 0.1);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            background-color: var(--light-color);
+        }
+        
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            background-color: var(--accent-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .logout-link {
+            display: flex;
+            align-items: center;
+            color: var(--secondary-text);
+            transition: color 0.2s;
+        }
+
+        .logout-link:hover {
+            color: var(--error-color);
+        }
+
+        .sidebar {
+            grid-area: sidebar;
+            background-color: var(--secondary-bg);
+            border-right: 1px solid var(--border-color);
+            padding: 1.5rem;
+            height: calc(100vh - 60px);
+            overflow-y: auto;
+            width: 300px;
+        }
+        
+        .history-section {
+            height: 100%;
+        }
+        
+        .history-header {
+            margin-bottom: 1.5rem;
+        }
+        
+        .history-header h2 {
+            font-size: 1rem;
+            color: var(--gray-color);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+        
+        .history-table th {
+            text-align: left;
+            padding: 0.8rem;
+            background-color: var(--light-color);
+            color: var(--gray-color);
+            font-weight: 500;
+        }
+        
+        .history-table td {
+            padding: 0.8rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .history-table tr:hover {
+            background-color: var(--light-color);
+        }
+        
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 4px;
+            color: var(--accent-color);
+            background-color: rgba(67, 97, 238, 0.1);
+            transition: all 0.2s;
+        }
+        
+        .action-btn:hover {
+            background-color: rgba(67, 97, 238, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .main-content {
+            grid-area: main;
+            padding: 2rem;
+            overflow-y: auto;
+            background-color: var(--primary-bg);
+        }
+
+        .content-header {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .content-header h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--accent-color);
+        }
+
+        .content-header p {
+            color: var(--secondary-text);
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: var(--card-radius);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        #template-selection {
+            max-width: 1400px;
+        }
+        
+        #content-form {
+            max-width: 800px;
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--accent-color);
+        }
+
+        .card-subtitle {
+            color: var(--secondary-text);
+            margin-bottom: 1.5rem;
+        }
+
+        .templates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .template-card {
+            border: 2px solid transparent;
+            border-radius: var(--card-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            background-color: var(--card-bg);
+            width: 100%;
+        }
+
+        .template-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 20px rgba(0,0,0,0.1);
+        }
+
+        .template-card.selected {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+
+        .template-image {
+            height: 180px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f0f2f5;
+        }
+
+        .template-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .template-info {
+            padding: 1rem;
+        }
+
+        .template-info h3 {
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .template-info p {
+            font-size: 0.875rem;
+            color: var(--secondary-text);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--dark-color);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border-radius: var(--border-radius);
+            border: 1px solid var(--border-color);
+            background-color: var(--secondary-bg);
+            color: var(--primary-text);
+            font-family: inherit;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            justify-content: space-between;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-size: 1rem;
+            border: none;
+        }
+
+        .btn-secondary {
+            background-color: var(--light-color);
+            color: var(--dark-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--border-color);
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: var(--success-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(40, 167, 69, 0.2);
+        }
+
+        #continue-to-content {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--border-radius);
+            border: none;
+            font-weight: 500;
+            display: block;
+            margin: 2rem auto 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        #continue-to-content:hover {
+            background-color: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(67, 97, 238, 0.2);
+        }
+
+        .btn-icon {
+            margin-right: 0.5rem;
+        }
+
+        .progress-container {
+            text-align: center;
+            padding: 3rem;
+            background-color: var(--card-bg);
+            border-radius: var(--card-radius);
+            box-shadow: var(--shadow);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid rgba(67, 97, 238, 0.1);
+            border-left-color: var(--accent-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1.5rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .preview-slides {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .slide {
+        border: 1px solid #ccc;
+        background-color: #fff;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        margin-bottom: 20px;
+        width: 100%;
+        box-sizing: border-box;
+        position: relative;
+        height: 540px; /* Standard PowerPoint slide height (in pixels, approx. 7.5in at 72dpi) */
+        overflow: auto;
+    }
+
+    .slide-title {
+        font-size: 28px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        text-align: center;
+        color: #2c3e50;
+    }
+
+    .slide-content {
+        font-size: 18px;
+        line-height: 1.6;
+        color: #333;
+        margin-bottom: 20px;
+        padding-right: 200px; /* Space for image */
+    }
+
+    .slide-image {
+        position: absolute;
+        right: 20px;
+        top: 20px;
+        max-width: 180px;
+        max-height: 135px; /* Approx. 2.5in at 72dpi */
+        border: 1px solid #ddd;
+        object-fit: contain;
+    }
+    .ppt-preview {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    .ppt-slide {
+        border: 1px solid #ccc;
+        background-color: #fff;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+        width: 100%;
+        height: 540px;
+        overflow: auto;
+        position: relative;
+    }
+    .ppt-slide img {
+        width: 100%;
+        height: auto;
+        max-height: 540px;
+        object-fit: contain;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .slide {
+            height: auto;
+            padding: 10px;
+        }
+        .slide-image {
+            position: static;
+            margin-top: 20px;
+            max-width: 100%;
+            height: auto;
+        }
+        .slide-content {
+            padding-right: 0;
+        }
+    }
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.5rem;
+            background-color: var(--success-color);
+            color: white;
+            border-radius: var(--border-radius);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .download-btn:hover {
+            background-color: var(--success-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(40, 167, 69, 0.2);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .template-loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--secondary-text);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .layout {
+                grid-template-columns: 1fr;
+                grid-template-rows: 60px auto 1fr;
+                grid-template-areas: 
+                    "header"
+                    "sidebar"
+                    "main";
+            }
+
+            .sidebar {
+                height: auto;
+                max-height: 300px;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+                width: 100%;
+            }
+
+            .templates-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .user-navigation {
+                gap: 0.8rem;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .main-content {
+                padding: 1rem;
+            }
+
+            .card {
+                padding: 1.5rem;
+            }
+
+            .templates-grid {
+                grid-template-columns: 1fr;
+                max-width: 400px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+        }
+
+        .flex {
+            display: flex;
+        }
+
+        .items-center {
+            align-items: center;
+        }
+
+        .gap-2 {
+            gap: 0.5rem;
+        }
+
+        .ml-2 {
+            margin-left: 0.5rem;
+        }
+
+        .text-xl {
+            font-size: 1.25rem;
+        }
+
+        .font-semibold {
+            font-weight: 600;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .p-8 {
+            padding: 2rem;
+        }
+
+        .mt-2 {
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <!-- User Header -->
+        <div class="user-header">
+            <div class="flex items-center">
+                <h2 class="app-title"><i class="fas fa-chart-bar"></i> AI PowerPoint Generator</h2>
+            </div>
+            <div class="user-navigation">
+                <a href="/dashboard" class="active">Dashboard</a>
+                <a href="/profile">Profile</a>
+                <div class="user-profile">
+                    <div class="user-avatar">
+                        {{ username[0].upper() if username else "?" }}
+                    </div>
+                    <span>{{ username }}</span>
+                    <a href="/logout" class="ml-2 logout-link">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar for Presentation History -->
+        <div class="sidebar">
+            <div class="history-section">
+                <div class="history-header">
+                    <h2><i class="fas fa-history"></i> Your Presentations</h2>
+                </div>
+
+                {% if presentations and presentations|length > 0 %}
+                <table class="history-table">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for pres in presentations %}
+                        <tr>
+                            <td>{{ pres.title }}</td>
+                            <td>{{ pres.created_at.strftime('%b %d') }}</td>
+                            <td>
+                                <a href="/download/{{ pres.filename }}" class="action-btn download-action" title="Download">
+                                    <i class="fas fa-download"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <div class="text-center p-8">
+                    <i class="fas fa-file-powerpoint" style="font-size: 2rem; color: var(--secondary-text); margin-bottom: 1rem;"></i>
+                    <p>No presentations yet. Create your first one!</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="main-content">
+            <header class="content-header">
+                <h1>Create New Presentation</h1>
+                <p>Select a template to get started</p>
+            </header>
+
+            <!-- Template Selection Card -->
+            <div id="template-selection" class="card fade-in">
+                <h2 class="card-title">Choose a Template</h2>
+                <p class="card-subtitle">Select a template for your presentation</p>
+
+                <div id="templates-grid" class="templates-grid">
+                    <div class="template-loading text-center p-8">
+                        <div class="spinner"></div>
+                        <p class="mt-2">Loading templates...</p>
+                    </div>
+                </div>
+
+                <button id="continue-to-content">
+                    <i class="fas fa-arrow-right"></i> Continue
+                </button>
+            </div>
+
+            <!-- Content Form -->
+           <!-- Add this inside the content form section after template selection -->
+<div id="content-form" class="card hidden fade-in">
+    <h2 class="card-title">Generate Content</h2>
+    <p class="card-subtitle">Choose how you want to create your presentation</p>
+    
+    <form id="ppt-form">
+        <div class="form-group">
+            <label for="content-type" class="form-label">Content Type</label>
+            <select id="content-type" name="content_type" class="form-control">
+                <option value="auto_generate">Auto-generate from topic</option>
+                <option value="custom">Provide my own content</option>
+            </select>
+        </div>
+        
+        <!-- Auto-generate section -->
+        <div id="auto-generate-section">
+            <div class="form-group">
+                <label for="topic" class="form-label">Presentation Topic</label>
+                <input type="text" id="topic" name="topic" class="form-control" placeholder="Enter your presentation topic">
+            </div>
+
+            <div class="form-group">
+                <label for="num-slides">Number of Slides:</label>
+                <input type="number" id="num_slides" name="num_slides" class="form-control" min="1" max="20" value="5">
+            </div>
+        </div>
+        
+        <!-- Custom content section -->
+        <div id="custom-content-section" class="hidden">
+            <div class="form-group">
+                <label for="custom-title" class="form-label">Presentation Title (Optional)</label>
+                <input type="text" id="custom-title" name="custom_title" class="form-control" placeholder="Enter presentation title">
+            </div>
+            
+            <div class="form-group">
+                <label for="custom-content" class="form-label">Presentation Content</label>
+                <textarea id="custom-content" name="custom_content" class="form-control" rows="10" placeholder="Enter your presentation content here. You can use headings with # and bullet points with - to structure your content."></textarea>
+            </div>
+            <div class="content-format-help">
+                <p><strong>Format tips:</strong></p>
+                <ul>
+                    <li>Use <code># Heading</code> for slide titles</li>
+                    <li>Use <code>- Point</code> for bullet points</li>
+                    <li>Or you can enter plain text and we'll structure it for you</li>
+                </ul>
+                <p><strong>Example:</strong></p>
+                <pre>
+# Introduction
+- First key point
+- Second key point
+
+# Main Content
+- Important information
+- Supporting details
+- Examples
+
+# Conclusion
+- Summary
+- Next steps
+                </pre>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="button" id="back-to-templates" class="btn btn-secondary">
+                <i class="fas fa-arrow-left btn-icon"></i> Back to Templates
+            </button>
+            <button type="submit" id="generate-btn" class="btn btn-success">
+                <i class="fas fa-magic btn-icon"></i> Generate Presentation
+            </button>
+        </div>
+    </form>
+</div>
+
+            <!-- Loading -->
+            <div id="loading" class="progress-container hidden fade-in">
+                <div class="spinner"></div>
+                <p class="progress-text">Creating your presentation...</p>
+                <p class="progress-status">Initializing...</p>
+                        </div>
+
+            <!-- Preview Section -->
+            <div id="preview-section" class="preview-container hidden fade-in">
+                <h2>Presentation Preview</h2>
+                <div id="ppt-preview" class="ppt-preview"></div>
+                <div class="preview-actions">
+                    <button class="btn btn-secondary" id="edit-content-btn">
+                        <i class="fas fa-edit btn-icon"></i> Edit
+                    </button>
+                    <a href="#" id="download-btn" class="download-btn">
+                        <i class="fas fa-download btn-icon"></i> Download
+                    </a>
+                </div>
+            </div>
+            <div id="editor-section" class="card hidden fade-in">
+                <h2 class="card-title">Edit Presentation</h2>
+                <div id="editor-content"></div>
+                <div class="form-actions">
+                    <button type="button" id="cancel-edit-btn" class="btn btn-secondary">
+                        <i class="fas fa-times btn-icon"></i> Cancel
+                    </button>
+                    <button type="button" id="save-changes-btn" class="btn btn-success">
+                        <i class="fas fa-save btn-icon"></i> Save Changes
+                    </button>
+                </div>
+            </div>
+
+            <div id="error" class="card hidden fade-in">
+                <h2 class="card-title">Error</h2>
+                <p id="error-message" class="card-subtitle"></p>
+                <div class="form-actions">
+                    <button id="try-again-btn" class="btn btn-secondary">
+                        <i class="fas fa-redo btn-icon"></i> Try Again
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="static/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,69 @@
+{
+    "name": "Vibrant Modern",
+    "description": "A colorful and modern template with bold design elements for creative presentations.",
+    "preview_image": "static/images/vibrant_modern_preview.png",
+    "styles": {
+        "title_slide": {
+            "background": {
+                "type": "gradient",
+                "colors": [
+                    {"r": 255, "g": 100, "b": 0},
+                    {"r": 0, "g": 150, "b": 255}
+                ]
+            },
+            "title_font": {
+                "name": "Montserrat",
+                "size": 50,
+                "color": {
+                    "r": 255,
+                    "g": 255,
+                    "b": 255
+                },
+                "bold": true,
+                "alignment": "center"
+            },
+            "subtitle_font": {
+                "name": "Montserrat",
+                "size": 30,
+                "color": {
+                    "r": 255,
+                    "g": 255,
+                    "b": 255
+                },
+                "bold": false,
+                "alignment": "center"
+            }
+        },
+        "content_slide": {
+            "background": {
+                "type": "solid",
+                "color": {
+                    "r": 255,
+                    "g": 255,
+                    "b": 255
+                }
+            },
+            "title_font": {
+                "name": "Montserrat",
+                "size": 36,
+                "color": {
+                    "r": 0,
+                    "g": 50,
+                    "b": 100
+                },
+                "bold": true,
+                "alignment": "left"
+            },
+            "body_font": {
+                "name": "Montserrat",
+                "size": 22,
+                "color": {
+                    "r": 0,
+                    "g": 0,
+                    "b": 0
+                },
+                "alignment": "left"
+            }
+        }
+    }
+}
